@@ -23,9 +23,25 @@ class User(ndb.Model):
         ent.put()
         return (ent, True)  # True meaning "created"
 
-class Level(ndb.Model):
-    level_id = ndb.StringProperty(required=True)#level id
+class Ranker(ndb.Model):
+    """
+        key = ranking_name ( unique string )
+    """
+    score_range = ndb.IntegerProperty(indexed=False, repeated=True)
+    branching_factor = ndb.IntegerProperty(indexed=False)
 
+class RankerScore(ndb.Model):
+    """
+        key = player_id
+    """
+    value = ndb.IntegerProperty(indexed=False, repeated=True)
+
+class Scores(ndb.Model):
+    """
+        key = player_id
+    """
+    value = ndb.IntegerProperty(repeated=True)
+    player_id =  ndb.StringProperty(required=True)
     @classmethod
     @ndb.transactional
     def my_get_or_insert(cls, id, **kwds):
@@ -38,20 +54,10 @@ class Level(ndb.Model):
         ent.put()
         return (ent, True)  # True meaning "created"
 
-class LevelScoreEntry(ndb.Model):
-    best_score = ndb.StringProperty()
-    best_time = ndb.StringProperty()
-    @classmethod
-    @ndb.transactional
-    def my_get_or_insert(cls, id, **kwds):
-        key = ndb.Key(cls, id)
-        ent = key.get()
-        if ent is not None:
-            return (ent, False)  # False meaning "not created"
-        ent = cls(**kwds)
-        ent.key = key
-        ent.put()
-        return (ent, True)  # True meaning "created"
-
+class RankerNode(ndb.Model):
+    """
+        key = node_id
+    """
+    child_counts = ndb.IntegerProperty(indexed=False, repeated=True)
 
 
