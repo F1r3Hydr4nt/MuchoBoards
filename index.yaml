@@ -14,3 +14,9 @@ indexes:
   properties:
   - name: value
   - name: player_id
+
+- kind: Scores
+  properties:
+  - name: value
+    direction: desc
+  - name: player_id

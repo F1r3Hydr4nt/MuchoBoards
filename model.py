@@ -35,6 +35,7 @@ class RankerScore(ndb.Model):
         key = player_id
     """
     value = ndb.IntegerProperty(indexed=False, repeated=True)
+    player_id = ndb.StringProperty(required=True)
 
 class Scores(ndb.Model):
     """
