@@ -31,6 +31,6 @@ class PostScore(webapp2.RequestHandler):
         user_rank_inverse = time_ranker.find_rank([int(level_score)])#zero_based ranking system +1st
         total_ranked = time_ranker.total_ranked_player_num()
         user_rank=total_ranked-user_rank_inverse
-        top_ten_times = time_ranker.get_top_ten_times()#dummy edit
+        top_ten_times = time_ranker.get_top_ten_times()
         print("TOP_TIMES-")
         print(top_ten_times)
