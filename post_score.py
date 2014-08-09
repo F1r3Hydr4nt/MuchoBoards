@@ -28,9 +28,9 @@ class PostScore(webapp2.RequestHandler):
         delete it and reset the new score"""
         time_ranker.set_score(nickname,[int(level_time)],True)
         #time is inverse
-        user_rank_inverse = score_ranker.find_rank([int(level_score)])#zero_based ranking system +1st
-        total_ranked = score_ranker.total_ranked_player_num()
+        user_rank_inverse = time_ranker.find_rank([int(level_score)])#zero_based ranking system +1st
+        total_ranked = time_ranker.total_ranked_player_num()
         user_rank=total_ranked-user_rank_inverse
-        top_ten_times = score_ranker.get_top_ten_times()
+        top_ten_times = time_ranker.get_top_ten_times()
         print("TOP_TIMES-")
         print(top_ten_times)

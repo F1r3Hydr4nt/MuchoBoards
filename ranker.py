@@ -400,9 +400,24 @@ class Ranker(object):
           score: the score to set name to
         """
         if isTime is False:
-            m=model.Scores.my_get_or_insert(name,player_id=name,value=score,parent=self.rootkey)
+            key=ndb.Key(model.Scores,name,parent=self.rootkey)
+            score_entity= key.get()
+            if(score_entity is None):
+                m=model.Scores(player_id=name,value=score)
+                m.key=key
+                m.put()
+            else:
+                score_entity.value=score
         else:
-            m=model.Times.my_get_or_insert(name,player_id=name,value=score,parent=self.rootkey)
+            key=ndb.Key(model.Times,name,parent=self.rootkey)
+            time_entity = key.get()
+            if(time_entity is None):
+                m=model.Times(player_id=name,value=score)
+                m.key=key
+                m.put()
+            else:
+                time_entity.value=score
+
         return self.set_scores({name: score})
 
     @ndb.transactional
@@ -687,9 +702,9 @@ class Ranker(object):
         return next_ten_scores
 
     def get_top_ten_times(self):
-        print("Won't get and update Scores or Times with ancestor")
         """Retrieves the max score and filters down the rows of the specifically maintained Scores data point"""
         #see line 70 for how this was implemented i.e. separate entity for ease of reordering
+        print(self.rootkey)
         q = model.Times.query(model.Times.value>=0,ancestor=self.rootkey).order(model.Times.value, model.Times.player_id)
         next_ten_scores = q.fetch(10)
         return next_ten_scores
