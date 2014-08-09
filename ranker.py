@@ -693,6 +693,8 @@ class Ranker(object):
             e.g. if two scores are tied at 5th and rank == 6, returns (score, 5).
         """
         return self._find_score(0, rank, self.score_range, True)
+
+    #@@fhonohan
     def get_top_ten(self):
         """Retrieves the max score and filters down the rows of the specifically maintained Scores data point"""
         #see line 70 for how this was implemented i.e. separate entity for ease of reordering

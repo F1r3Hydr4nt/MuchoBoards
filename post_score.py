@@ -16,11 +16,13 @@ class PostScore(webapp2.RequestHandler):
         score_ranker=get_ranker(score_ranker_key)
         score_ranker.set_score(nickname,[int(level_score)],False)
 
-        user_rank = score_ranker.find_rank([int(level_score)])+1#zero_based ranking system +1st
+        user_score_rank = score_ranker.find_rank([int(level_score)])+1#zero_based ranking system +1st
         top_ten_scores = score_ranker.get_top_ten()
-        print("TOP_SCORES-")
-        print(top_ten_scores)
-        #print [MIN_SCORE, MAX_SCORE + 1]
+        #create a list of dicts for each score
+        score_dict={}
+        for s in top_ten_scores:
+            score_dict[s.player_id]=str(s.value)
+
         time_ranker_key='level_'+str(level_number)+'_time'
         time_ranker=get_ranker(time_ranker_key)
         """As set_score only works for greater values or else it retains itself
@@ -30,7 +32,15 @@ class PostScore(webapp2.RequestHandler):
         #time is inverse
         user_rank_inverse = time_ranker.find_rank([int(level_score)])#zero_based ranking system +1st
         total_ranked = time_ranker.total_ranked_player_num()
-        user_rank=total_ranked-user_rank_inverse
+        user_time_rank=(total_ranked-(user_rank_inverse+1))
         top_ten_times = time_ranker.get_top_ten_times()
-        print("TOP_TIMES-")
-        print(top_ten_times)
+        #create a list of dicts for each time
+        time_dict={}
+        for t in top_ten_times:
+            time_dict[t.player_id]=str(t.value)
+
+        print('user score rank:'+str(user_score_rank))
+        print(json.dumps(score_dict))
+        print('user time rank:'+str(user_time_rank))
+        print(json.dumps(time_dict))
+
