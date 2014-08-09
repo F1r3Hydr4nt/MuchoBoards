@@ -20,3 +20,21 @@ indexes:
   - name: value
     direction: desc
   - name: player_id
+
+- kind: Scores
+  ancestor: yes
+  properties:
+  - name: value
+    direction: desc
+  - name: player_id
+
+- kind: Times
+  properties:
+  - name: value
+  - name: player_id
+
+- kind: Times
+  ancestor: yes
+  properties:
+  - name: value
+  - name: player_id

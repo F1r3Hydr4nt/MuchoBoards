@@ -55,6 +55,25 @@ class Scores(ndb.Model):
         ent.put()
         return (ent, True)  # True meaning "created"
 
+class Times(ndb.Model):
+    """
+        key = player_id
+    """
+    value = ndb.IntegerProperty(repeated=True)
+    player_id =  ndb.StringProperty(required=True)
+    @classmethod
+    @ndb.transactional
+    def my_get_or_insert(cls, id, **kwds):
+        key = ndb.Key(cls, id)
+        ent = key.get()
+        if ent is not None:
+            return (ent, False)  # False meaning "not created"
+        ent = cls(**kwds)
+        ent.key = key
+        ent.put()
+        return (ent, True)  # True meaning "created"
+
+
 class RankerNode(ndb.Model):
     """
         key = node_id

@@ -390,7 +390,7 @@ class Ranker(object):
             keys = [obj.key for obj in score_entities_to_delete]
             ndb.delete_multi(keys)
 
-    def set_score(self, name, score):
+    def set_score(self, name, score,isTime):
         """Sets a single score.
 
         This is equivalent to calling 'SetScores({name: score})'
@@ -399,7 +399,10 @@ class Ranker(object):
           name: the name of the score as a string
           score: the score to set name to
         """
-        m=model.Scores.my_get_or_insert(name,player_id=name,value=score,parent=self.rootkey)
+        if isTime is False:
+            m=model.Scores.my_get_or_insert(name,player_id=name,value=score,parent=self.rootkey)
+        else:
+            m=model.Times.my_get_or_insert(name,player_id=name,value=score,parent=self.rootkey)
         return self.set_scores({name: score})
 
     @ndb.transactional
@@ -679,9 +682,18 @@ class Ranker(object):
         """Retrieves the max score and filters down the rows of the specifically maintained Scores data point"""
         #see line 70 for how this was implemented i.e. separate entity for ease of reordering
         max_score=self.score_range[1]
-        q = model.Scores.query(model.Scores.value<=max_score).order(-model.Scores.value, model.Scores.player_id)
+        q = model.Scores.query(model.Scores.value<=max_score,ancestor=self.rootkey).order(-model.Scores.value, model.Scores.player_id)
         next_ten_scores = q.fetch(10)
         return next_ten_scores
+
+    def get_top_ten_times(self):
+        print("Won't get and update Scores or Times with ancestor")
+        """Retrieves the max score and filters down the rows of the specifically maintained Scores data point"""
+        #see line 70 for how this was implemented i.e. separate entity for ease of reordering
+        q = model.Times.query(model.Times.value>=0,ancestor=self.rootkey).order(model.Times.value, model.Times.player_id)
+        next_ten_scores = q.fetch(10)
+        return next_ten_scores
+
 
     def total_ranked_player_num(self):
         """ OLDNAME: TotalRankedScores
